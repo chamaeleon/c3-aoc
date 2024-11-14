@@ -20,7 +20,7 @@ fn String! slurp(String filename)
 {
     char[] bytes = file::load_temp(filename)!;
 
-    return (String)bytes[:bytes.len];
+    return ((String)bytes[:bytes.len]).trim();
 }
 
 <*
