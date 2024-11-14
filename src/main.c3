@@ -29,7 +29,7 @@ fn void run(Part part)
         if (try result) {
             io::printfn("%16s", result);
         } else {
-            io::printn("<ERROR>");
+            io::printfn("%16s", "<ERROR>");
         }
     };
 }
