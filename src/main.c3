@@ -1,5 +1,6 @@
 module aoc;
 import std::io;
+import std::time::clock;
 import aoc::y2015;
 
 def Solver = fn String!();
@@ -24,10 +25,12 @@ fn void run(Part part)
 {
     @pool()
     {
+        Clock t1 = clock::now();
         String! result = part.solver();
+        Clock t2 = clock::now();
 
         if (try result) {
-            io::printfn("%16s", result);
+            io::printfn("%16s [%.2fs]", result, (double)(t2-t1)/1000000000.0);
         } else {
             io::printfn("%16s", "<ERROR>");
         }
