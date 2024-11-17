@@ -78,5 +78,24 @@ fn String[]! get_groups(String re_str, String s)
         groups[i] = s[match.rm_so..match.rm_eo-1];
     }
 
+    posix::regfree(&re);
+
     return groups[:matches.len-1];
+}
+
+fn bool match(String re_str, String s)
+{
+    char[1024] errbuf;
+    Regex_t re;
+    CInt result = posix::regcomp(&re, re_str, 0);
+    
+    if (result != 0) {
+        return false;
+    }
+
+    bool matched = (posix::regexec(&re, s, 0, null, 0) == 0);
+
+    posix::regfree(&re);
+
+    return matched;
 }
