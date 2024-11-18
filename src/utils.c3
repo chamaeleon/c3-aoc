@@ -69,7 +69,7 @@ fn String[]! get_groups(String re_str, String s)
         result = posix::regexec(&re, s.zstr_tcopy(), matches.len, &matches, 0);
         if (result != 0) {
             posix::regerror(result, &re, &errbuf, 1024);
-            io::printfn("regexec error: %s", (ZString)&errbuf);
+            // io::printfn("regexec error: %s", (ZString)&errbuf);
             return AoCFault.INVALID_INPUT?;
         }
 
