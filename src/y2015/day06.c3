@@ -2,13 +2,6 @@ module aoc::y2015::day06;
 import aoc::utils;
 import std::io;
 
-enum Command
-{
-    TURN_ON,
-    TURN_OFF,
-    TOGGLE,
-}
-
 fn void swap(int *a, int *b)
 {
     int tmp = *a;
@@ -18,38 +11,26 @@ fn void swap(int *a, int *b)
 
 fn void! apply_cmd_part1(bool* grid, String line)
 {
-    String[] groups;
-    Command cmd;
+    String[]! groups = utils::get_groups("(turn on|turn off|toggle) ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)", line);
 
-    if (try g = utils::get_groups("turn on ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)", line)) {
-        cmd = TURN_ON;
-        groups = g;
-    } else if (try g = utils::get_groups("turn off ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)", line)) {
-        cmd = TURN_OFF;
-        groups = g;
-    } else if (try g = utils::get_groups("toggle ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)", line)) {
-        cmd = TOGGLE;
-        groups = g;
-    } else {
-        return;
-    }
+    if (catch groups) return;
 
-    int x1 = groups[0].to_int()!;
-    int y1 = groups[1].to_int()!;
-    int x2 = groups[2].to_int()!;
-    int y2 = groups[3].to_int()!;
+    String cmd = groups[0];
+    int x1 = groups[1].to_int()!;
+    int y1 = groups[2].to_int()!;
+    int x2 = groups[3].to_int()!;
+    int y2 = groups[4].to_int()!;
 
     if (x1 > x2) swap(&x1, &x2);
     if (y1 > y2) swap(&y1, &y2);
 
     for (int row = y1; row <= y2; row++) {
         for (int col = x1; col <= x2; col++) {
-            switch (cmd) {
-            case Command.TURN_ON:
+            if (cmd == "turn on") {
                 grid[row*1000+col] = true;
-            case Command.TURN_OFF:
+            } else if (cmd == "turn off") {
                 grid[row*1000+col] = false;
-            case Command.TOGGLE:
+            } else if (cmd == "toggle") {
                 grid[row*1000+col] = !grid[row*1000+col];
             }
         }
@@ -58,39 +39,27 @@ fn void! apply_cmd_part1(bool* grid, String line)
 
 fn void! apply_cmd_part2(int* grid, String line)
 {
-    String[] groups;
-    Command cmd;
+    String[]! groups = utils::get_groups("(turn on|turn off|toggle) ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)", line);
 
-    if (try g = utils::get_groups("turn on ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)", line)) {
-        cmd = TURN_ON;
-        groups = g;
-    } else if (try g = utils::get_groups("turn off ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)", line)) {
-        cmd = TURN_OFF;
-        groups = g;
-    } else if (try g = utils::get_groups("toggle ([0-9]+),([0-9]+) through ([0-9]+),([0-9]+)", line)) {
-        cmd = TOGGLE;
-        groups = g;
-    } else {
-        return;
-    }
+    if (catch groups) return;
 
-    int x1 = groups[0].to_int()!;
-    int y1 = groups[1].to_int()!;
-    int x2 = groups[2].to_int()!;
-    int y2 = groups[3].to_int()!;
+    String cmd = groups[0];
+    int x1 = groups[1].to_int()!;
+    int y1 = groups[2].to_int()!;
+    int x2 = groups[3].to_int()!;
+    int y2 = groups[4].to_int()!;
 
     if (x1 > x2) swap(&x1, &x2);
     if (y1 > y2) swap(&y1, &y2);
 
     for (int row = y1; row <= y2; row++) {
         for (int col = x1; col <= x2; col++) {
-            switch (cmd) {
-            case Command.TURN_ON:
+            if (cmd == "turn on") {
                 grid[row*1000+col]++;
-            case Command.TURN_OFF:
+            } else if (cmd == "turn off") {
                 grid[row*1000+col]--;
                 if (grid[row*1000+col] < 0) grid[row*1000+col] = 0;
-            case Command.TOGGLE:
+            } else if (cmd == "toggle") {
                 grid[row*1000+col] += 2;
             }
         }
