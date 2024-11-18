@@ -56,29 +56,31 @@ fn String[]! get_groups(String re_str, String s)
     String* groups;
     Regex_t re;
     char[1024] errbuf;
-
-    CInt result = posix::regcomp(&re, re_str, 0);
-    if (result != 0) {
-        posix::regerror(result, &re, &errbuf, 1024);
-        io::printfn("regcomp error: %s", (ZString)&errbuf);
-        return AoCFault.INVALID_REGEX?;
-    }
-
     Regmatch_t[16] matches;
-    result = posix::regexec(&re, s, matches.len, &matches, 0);
-    if (result != 0) {
-        posix::regerror(result, &re, &errbuf, 1024);
-        io::printfn("regexec error: %s", (ZString)&errbuf);
-        return AoCFault.INVALID_INPUT?;
-    }
+
+    @pool() {
+        CInt result = posix::regcomp(&re, re_str.zstr_tcopy(), 0);
+        if (result != 0) {
+            posix::regerror(result, &re, &errbuf, 1024);
+            io::printfn("regcomp error: %s", (ZString)&errbuf);
+            return AoCFault.INVALID_REGEX?;
+        }
+
+        result = posix::regexec(&re, s.zstr_tcopy(), matches.len, &matches, 0);
+        if (result != 0) {
+            posix::regerror(result, &re, &errbuf, 1024);
+            io::printfn("regexec error: %s", (ZString)&errbuf);
+            return AoCFault.INVALID_INPUT?;
+        }
+
+        posix::regfree(&re);
+    };
 
     groups = mem::temp_new_array(String, matches.len-1);
     foreach (i, match : matches[1..]) {
         if (match.rm_so == -1) continue;
         groups[i] = s[match.rm_so..match.rm_eo-1];
     }
-
-    posix::regfree(&re);
 
     return groups[:matches.len-1];
 }
@@ -87,15 +89,19 @@ fn bool match(String re_str, String s)
 {
     char[1024] errbuf;
     Regex_t re;
-    CInt result = posix::regcomp(&re, re_str, 0);
-    
-    if (result != 0) {
-        return false;
-    }
 
-    bool matched = (posix::regexec(&re, s, 0, null, 0) == 0);
+    @pool()
+    {
+        CInt result = posix::regcomp(&re, re_str.zstr_tcopy(), 0);
+        
+        if (result != 0) {
+            return false;
+        }
 
-    posix::regfree(&re);
+        bool matched = (posix::regexec(&re, s.zstr_tcopy(), 0, null, 0) == 0);
 
-    return matched;
+        posix::regfree(&re);
+
+        return matched;
+    };
 }
