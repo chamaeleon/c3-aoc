@@ -19,6 +19,7 @@ struct Year
 
 const Year[] YEARS = {
     y2015::PROBLEMS,
+    y2024::PROBLEMS,
 };
 
 fn void run(Part part)
