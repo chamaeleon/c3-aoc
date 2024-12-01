@@ -1,18 +1,13 @@
 module aoc::y2015::day04;
 import aoc::utils;
 import std::hash::md5;
+import std::encoding;
 
 fn String hex_hash(String s)
 {
     char[md5::HASH_BYTES] data = md5::hash(s);
-    DString hex;
-    hex.temp_init();
 
-    for (int i = 0; i < 3; i++) {
-        hex.appendf("%02X", data[i]);
-    }
-
-    return hex.tcopy_str();
+    return hex::encode_temp(&data);
 }
 
 fn String! part1()
