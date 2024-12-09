@@ -5,14 +5,9 @@ import std::collections;
 
 def Location = int[<2>];
 
-fn bool Location.equals(self, Location other)
-{
-    return self == other;
-}
-
 fn int Location.hash(self)
 {
-    return self.x.hash() + self.y.hash();
+    return 1729 * self.x.hash() + self.y.hash();
 }
 
 struct Node
