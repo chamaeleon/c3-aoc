@@ -12,5 +12,6 @@ const Year PROBLEMS = {
         {"Day 07 Part 1", &day07::part1}, {"Day 07 Part 2", &day07::part2},
         {"Day 08 Part 1", &day08::part1}, {"Day 08 Part 2", &day08::part2},
         {"Day 09 Part 1", &day09::part1}, {"Day 09 Part 2", &day09::part2},
+        {"Day 10 Part 1", &day10::part1}, {"Day 10 Part 2", &day10::part2},
     }
 };
